@@ -4,6 +4,7 @@
  */
 package Interfaz;
 
+import Conexion.DataAccesSolicitud;
 import Conexion.DataBaseConnection;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
@@ -16,8 +17,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import Conexion.DataBaseConnection;
 import Conexion.DataAccesUsuario;
+import Entidades.Emergencia;
+import Entidades.Solicitud;
 import java.util.List;
 import javax.swing.DefaultListModel;
+
+import Interfaz.Frm_Principal;
+import Interfaz.Frm_Usuario;
+import java.awt.Color;
+import java.time.format.DateTimeFormatter;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 /**
  *
  * @author PC
@@ -27,16 +38,30 @@ public class Frm_Usuario extends javax.swing.JFrame {
     private Connection conexion;
     private Statement st;
     private DefaultListModel modelList = new DefaultListModel();
-    private List<Usuario> usuariosList;
+    private String[][] emergencias;
+
+    private List<Solicitud> solicitudesList;
+    private DefaultTableModel dtm;
+
+    private Object[] o = new Object[7];
     /**
      * Creates new form Frm_Usuario
      */
     public Frm_Usuario() {
-        conectarDB();
-        initComponents();
-        usuariosLista.setModel(modelList);
-        listarUsuarios();
-        
+        try {
+            // Obtener la conexión centralizada
+            conexion = DataBaseConnection.getInstancia().getConexion();
+            st = conexion.createStatement();
+            initComponents();
+        } catch (SQLException e) {
+            System.err.println("Error al crear el Statement: " + e.getMessage());
+        }
+        dtm = (DefaultTableModel)t_solicitudes.getModel();
+        this.setSize(825,600);
+        configurarTabla();
+        panelInicio.setVisible(false);  
+        panelRecursos.setVisible(false);
+        panelSolicitudes.setVisible(false);
     }
 
     /**
@@ -48,191 +73,518 @@ public class Frm_Usuario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        usuariosLista = new javax.swing.JList<>();
-        btn_registrar = new javax.swing.JButton();
-        btn_buscar = new javax.swing.JButton();
-        btn_eliminar = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        txt_dni = new java.awt.TextField();
+        background = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        txt_id = new java.awt.TextField();
-        jLabel3 = new javax.swing.JLabel();
-        txt_nombre = new java.awt.TextField();
-        jLabel4 = new javax.swing.JLabel();
+        btnInicio = new javax.swing.JButton();
+        lineaInicio = new javax.swing.JPanel();
+        btnSolicitudes = new javax.swing.JButton();
+        lineaSolicitudes = new javax.swing.JPanel();
+        btnRecursos = new javax.swing.JButton();
+        lineaRecursos = new javax.swing.JPanel();
+        panelSolicitudes = new javax.swing.JPanel();
+        jLabel17 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        t_solicitudes = new javax.swing.JTable();
+        panelInicio = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        panelSolicitud = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        boxTipo = new javax.swing.JComboBox<>();
+        btnEnviar = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txt_descripcion = new javax.swing.JTextArea();
+        jLabel16 = new javax.swing.JLabel();
+        txt_direccion = new javax.swing.JTextField();
+        panelRecursos = new javax.swing.JPanel();
+        panel1 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        panel3 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        panel2 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        txt_dni = new javax.swing.JLabel();
+        DNI1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
 
-        usuariosLista.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        usuariosLista.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(usuariosLista);
+        background.setBackground(new java.awt.Color(255, 255, 255));
+        background.setDoubleBuffered(false);
+        background.setMinimumSize(new java.awt.Dimension(810, 500));
+        background.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(20, 146, 420, 190);
+        jPanel1.setBackground(new java.awt.Color(204, 0, 51));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btn_registrar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
-        btn_registrar.setText("Registrar");
-        btn_registrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_registrarActionPerformed(evt);
+        jLabel2.setFont(new java.awt.Font("Roboto Light", 0, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Centro de Asistencia de Emergencia");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 70));
+
+        background.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 810, 70));
+
+        btnInicio.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        btnInicio.setText("Inicio");
+        btnInicio.setBorder(null);
+        btnInicio.setContentAreaFilled(false);
+        btnInicio.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnInicio.setDefaultCapable(false);
+        btnInicio.setFocusPainted(false);
+        btnInicio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnInicioMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnInicioMouseExited(evt);
             }
         });
-        getContentPane().add(btn_registrar);
-        btn_registrar.setBounds(340, 30, 90, 23);
-
-        btn_buscar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
-        btn_buscar.setText("Buscar");
-        btn_buscar.addActionListener(new java.awt.event.ActionListener() {
+        btnInicio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_buscarActionPerformed(evt);
+                btnInicioActionPerformed(evt);
             }
         });
-        getContentPane().add(btn_buscar);
-        btn_buscar.setBounds(340, 70, 90, 23);
+        background.add(btnInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 88, 126, -1));
 
-        btn_eliminar.setFont(new java.awt.Font("Yu Gothic UI Semibold", 1, 12)); // NOI18N
-        btn_eliminar.setText("Eliminar");
-        btn_eliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_eliminarActionPerformed(evt);
+        lineaInicio.setBackground(new java.awt.Color(204, 0, 51));
+        lineaInicio.setOpaque(false);
+        lineaInicio.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        background.add(lineaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 80, 2));
+
+        btnSolicitudes.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        btnSolicitudes.setText("Solicitudes");
+        btnSolicitudes.setBorder(null);
+        btnSolicitudes.setContentAreaFilled(false);
+        btnSolicitudes.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSolicitudes.setDefaultCapable(false);
+        btnSolicitudes.setFocusPainted(false);
+        btnSolicitudes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnSolicitudesMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnSolicitudesMouseExited(evt);
             }
         });
-        getContentPane().add(btn_eliminar);
-        btn_eliminar.setBounds(340, 110, 90, 23);
+        btnSolicitudes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSolicitudesActionPerformed(evt);
+            }
+        });
+        background.add(btnSolicitudes, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 90, 126, 20));
 
-        jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        jLabel1.setText("DNI");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(20, 110, 50, 16);
-        getContentPane().add(txt_dni);
-        txt_dni.setBounds(80, 110, 150, 20);
+        lineaSolicitudes.setBackground(new java.awt.Color(204, 0, 51));
+        lineaSolicitudes.setOpaque(false);
+        lineaSolicitudes.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        background.add(lineaSolicitudes, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 110, 90, 2));
 
-        jLabel2.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
-        jLabel2.setText("USUARIO");
-        jLabel2.setToolTipText("");
-        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(150, 10, 110, 30);
+        btnRecursos.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        btnRecursos.setText("Recursos");
+        btnRecursos.setBorder(null);
+        btnRecursos.setContentAreaFilled(false);
+        btnRecursos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRecursos.setDefaultCapable(false);
+        btnRecursos.setFocusPainted(false);
+        btnRecursos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnRecursosMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnRecursosMouseExited(evt);
+            }
+        });
+        btnRecursos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRecursosActionPerformed(evt);
+            }
+        });
+        background.add(btnRecursos, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 90, 126, -1));
 
-        txt_id.setEditable(false);
-        getContentPane().add(txt_id);
-        txt_id.setBounds(80, 50, 150, 20);
+        lineaRecursos.setBackground(new java.awt.Color(204, 0, 51));
+        lineaRecursos.setOpaque(false);
+        lineaRecursos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        background.add(lineaRecursos, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 110, 90, 2));
 
-        jLabel3.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        jLabel3.setText("Nombre");
-        getContentPane().add(jLabel3);
-        jLabel3.setBounds(20, 80, 50, 20);
-        getContentPane().add(txt_nombre);
-        txt_nombre.setBounds(80, 80, 150, 20);
+        panelSolicitudes.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel4.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 12)); // NOI18N
-        jLabel4.setText("ID");
-        getContentPane().add(jLabel4);
-        jLabel4.setBounds(20, 50, 40, 20);
+        jLabel17.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        jLabel17.setText("Mis Solicitudes");
+        panelSolicitudes.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 120, 33));
+
+        t_solicitudes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "DNI Usuario", "ID Emergencia", "Descripcion", "Direccion", "Fecha", "Estado"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        t_solicitudes.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jScrollPane2.setViewportView(t_solicitudes);
+        if (t_solicitudes.getColumnModel().getColumnCount() > 0) {
+            t_solicitudes.getColumnModel().getColumn(0).setPreferredWidth(10);
+            t_solicitudes.getColumnModel().getColumn(1).setPreferredWidth(10);
+            t_solicitudes.getColumnModel().getColumn(2).setPreferredWidth(10);
+            t_solicitudes.getColumnModel().getColumn(3).setPreferredWidth(20);
+            t_solicitudes.getColumnModel().getColumn(6).setPreferredWidth(10);
+        }
+
+        panelSolicitudes.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 740, 280));
+
+        background.add(panelSolicitudes, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 770, 340));
+
+        panelInicio.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setFont(new java.awt.Font("Roboto Light", 1, 18)); // NOI18N
+        jLabel6.setText("Bienvenido");
+        panelInicio.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 25, -1, 33));
+
+        panelSolicitud.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED, java.awt.Color.lightGray, java.awt.Color.gray, null, java.awt.Color.lightGray));
+        panelSolicitud.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(204, 0, 51));
+        jLabel7.setText("Solicitar Asistencia de Emergencia");
+        panelSolicitud.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 33));
+
+        jLabel8.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel8.setText("Descripcion");
+        panelSolicitud.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 230, 20));
+
+        boxTipo.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        boxTipo.setToolTipText("");
+        boxTipo.setName(""); // NOI18N
+        boxTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boxTipoActionPerformed(evt);
+            }
+        });
+        panelSolicitud.add(boxTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 250, -1));
+
+        btnEnviar.setBackground(new java.awt.Color(204, 0, 51));
+        btnEnviar.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        btnEnviar.setForeground(new java.awt.Color(255, 255, 255));
+        btnEnviar.setText("Enviar Solicitud de Emergencia");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
+        panelSolicitud.add(btnEnviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, 350, -1));
+
+        jLabel15.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel15.setText("Direccion");
+        panelSolicitud.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 40, 230, 20));
+
+        jScrollPane1.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+
+        txt_descripcion.setColumns(20);
+        txt_descripcion.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        txt_descripcion.setLineWrap(true);
+        txt_descripcion.setRows(5);
+        jScrollPane1.setViewportView(txt_descripcion);
+
+        panelSolicitud.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 660, 60));
+
+        jLabel16.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel16.setText("Tipo de emergencia");
+        panelSolicitud.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 230, 20));
+
+        txt_direccion.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        panelSolicitud.add(txt_direccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 70, 280, -1));
+
+        panelInicio.add(panelSolicitud, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 700, 250));
+
+        background.add(panelInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 760, 340));
+
+        panelRecursos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        panel1.setBackground(new java.awt.Color(255, 204, 204));
+        panel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        panel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel9.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(153, 0, 0));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("Emergencia Medica");
+        panel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 210, 33));
+
+        jLabel10.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(153, 0, 0));
+        jLabel10.setText("LLame al 116 para asistencia medica inmediata");
+        panel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 260, 30));
+
+        panelRecursos.add(panel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 30, 270, 110));
+
+        panel3.setBackground(new java.awt.Color(255, 255, 204));
+        panel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        panel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel11.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(102, 102, 0));
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("Defensa civil");
+        panel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 210, 33));
+
+        jLabel12.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(102, 102, 0));
+        jLabel12.setText("LLame al 115 para reportar un incidente");
+        panel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 230, 30));
+
+        panelRecursos.add(panel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, 270, 110));
+
+        panel2.setBackground(new java.awt.Color(153, 204, 255));
+        panel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        panel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel13.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(0, 0, 204));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("Emergencia Policial");
+        panel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 210, 33));
+
+        jLabel14.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(0, 0, 204));
+        jLabel14.setText("LLame al 105 para asistencia policial");
+        panel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, 200, 30));
+
+        panelRecursos.add(panel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 30, 280, 110));
+
+        background.add(panelRecursos, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 760, 340));
+
+        txt_dni.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
+        txt_dni.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        background.add(txt_dni, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 80, 140, 20));
+
+        DNI1.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
+        DNI1.setText("DNI:");
+        DNI1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        background.add(DNI1, new org.netbeans.lib.awtextra.AbsoluteConstraints(627, 80, 30, 20));
+
+        getContentPane().add(background);
+        background.setBounds(0, 0, 810, 580);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
-    //Conecta Base de Datos
-    private void conectarDB(){
-        try {
-            conexion = DataBaseConnection.getConnection();
-            st = conexion.createStatement();
-        } catch (SQLException ex) {
-            Logger.getLogger(Frm_Usuario.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private void configurarTabla() {
+        t_solicitudes.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        
+        TableColumnModel columnModel = t_solicitudes.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(50);
+        columnModel.getColumn(1).setPreferredWidth(100);
+        columnModel.getColumn(2).setPreferredWidth(100);
+        columnModel.getColumn(3).setPreferredWidth(400);
+        columnModel.getColumn(4).setPreferredWidth(80);
+        columnModel.getColumn(5).setPreferredWidth(80);
+        columnModel.getColumn(6).setPreferredWidth(80);
     }
-    //BOTONES
-    private void btn_registrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_registrarActionPerformed
-        Usuario user = new Usuario(txt_nombre.getText(), txt_dni.getText());
-        insertarUsuario(user);
-        limpiarCampos();
-        listarUsuarios();
-    }//GEN-LAST:event_btn_registrarActionPerformed
+    private void btnInicioMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnInicioMouseEntered
+        btnInicio.setForeground(Color.DARK_GRAY);
+    }//GEN-LAST:event_btnInicioMouseEntered
 
-    private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
-        String dni = txt_dni.getText();
-        Usuario user = new Usuario(dni);
-        buscarUsuario(user,dni);
-    }//GEN-LAST:event_btn_buscarActionPerformed
+    private void btnInicioMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnInicioMouseExited
+        btnInicio.setForeground(Color.black);
+    }//GEN-LAST:event_btnInicioMouseExited
 
-    private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
-        int index = usuariosLista.getSelectedIndex();
-        Usuario userSelected = usuariosList.get(index);
-        eliminarUsuario(userSelected);
-    }//GEN-LAST:event_btn_eliminarActionPerformed
+    private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
+        configurarLinea(true,false,false);
+        cargarEmergencias();
+        panelInicio.setVisible(true);
+        panelRecursos.setVisible(false);
+        panelSolicitudes.setVisible(false);
+    }//GEN-LAST:event_btnInicioActionPerformed
+
+    private void btnSolicitudesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSolicitudesMouseEntered
+        btnSolicitudes.setForeground(Color.DARK_GRAY);
+    }//GEN-LAST:event_btnSolicitudesMouseEntered
+
+    private void btnSolicitudesMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSolicitudesMouseExited
+        btnSolicitudes.setForeground(Color.black);
+    }//GEN-LAST:event_btnSolicitudesMouseExited
+
+    private void btnSolicitudesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSolicitudesActionPerformed
+        configurarLinea(false,true,false);
+        panelInicio.setVisible(false);
+        panelRecursos.setVisible(false);
+        panelSolicitudes.setVisible(true);
+        listarSolicitudes(txt_dni.getText());
+
+    }//GEN-LAST:event_btnSolicitudesActionPerformed
+
+    private void btnRecursosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRecursosMouseEntered
+        btnRecursos.setForeground(Color.DARK_GRAY);
+    }//GEN-LAST:event_btnRecursosMouseEntered
+
+    private void btnRecursosMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRecursosMouseExited
+        btnRecursos.setForeground(Color.black);
+    }//GEN-LAST:event_btnRecursosMouseExited
+
+    private void btnRecursosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecursosActionPerformed
+        configurarLinea(false,false,true);
+        
+        panelInicio.setVisible(false);
+        panelRecursos.setVisible(true);
+        panelSolicitudes.setVisible(false);
+    }//GEN-LAST:event_btnRecursosActionPerformed
+
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+        Emergencia idSeleccionada = (Emergencia) boxTipo.getSelectedItem();
+        
+        if (idSeleccionada != null) {
+
+            Solicitud slc = new Solicitud(txt_dni.getText(), idSeleccionada.getId(), txt_descripcion.getText(), txt_direccion.getText(),"Pendiente");
+            insertarSolicitud(slc);
+            limpiarCampos();
+            
+            JOptionPane.showMessageDialog(this, "Solicitud enviada correctamente:\n" +
+                "Nombre Emergencia: " + idSeleccionada.getNombre() + "\nID: " + idSeleccionada.getId());
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor selecciona una emergencia.");
+        }
+    }//GEN-LAST:event_btnEnviarActionPerformed
+
+    private void boxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxTipoActionPerformed
+        Emergencia emergenciaSeleccionada = (Emergencia) boxTipo.getSelectedItem();
+
+        if (emergenciaSeleccionada != null) {
+            System.out.println("ID: " + emergenciaSeleccionada.getId());
+            System.out.println("Nombre: " + emergenciaSeleccionada.getNombre());
+        }
+    }//GEN-LAST:event_boxTipoActionPerformed
     
     //METODOS
-    private void insertarUsuario(Usuario user){
+        private void limpiarCampos() {
+        txt_descripcion.setText("");
+
+    }
+    private void insertarSolicitud(Solicitud slc){
         try {
-            DataAccesUsuario dao = new DataAccesUsuario(st,user);
-            dao.insertarUsuario();
+            DataAccesSolicitud das = new DataAccesSolicitud(st,slc,this);
+            das.insertarSolicitud();
         } catch (SQLException ex) {
-            Logger.getLogger(Frm_Usuario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Ha ocurrido un error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     private void eliminarUsuario(Usuario user){
         try {
-            DataAccesUsuario dao = new DataAccesUsuario(st,user);
+            DataAccesUsuario dao = new DataAccesUsuario(st,user,this);
             dao.eliminarUsuario();
-            listarUsuarios();
+            //listarSolicitudes();
         } catch (SQLException ex) {
             Logger.getLogger(Frm_Usuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } 
-    private void buscarUsuario(Usuario user, String dni){
-        DataAccesUsuario dao = new DataAccesUsuario(st, user);
-        try {
-            Usuario usuarioEncontrado = dao.buscarUsuarioPorDni();
-            if (usuarioEncontrado != null) {
-                txt_id.setText(String.valueOf(usuarioEncontrado.getIdUsuario()));
-                txt_nombre.setText(usuarioEncontrado.getNombre());
-                txt_dni.setText(usuarioEncontrado.getDni());
-                JOptionPane.showMessageDialog(this, "Usuario encontrado: " + usuarioEncontrado.getUsuarioText());
-            } else {
-                JOptionPane.showMessageDialog(this, "Usuario no encontrado.");
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Frm_Usuario.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Error al buscar el usuario: " + ex.getMessage());
+    }  
+    public void configurarLinea(boolean bool1, boolean bool2, boolean bool3){
+        //LineaInicio, LineaSolicitud, LineaRecursos
+        lineaInicio.setOpaque(bool1);
+        lineaSolicitudes.setOpaque(bool2);
+        lineaRecursos.setOpaque(bool3);
+        
+        if (bool1 == true){
+            lineaInicio.setBackground(Color.red);
+            lineaSolicitudes.setBackground(Color.white);
+            lineaRecursos.setBackground(Color.white );
         }
-    } 
-    private void listarUsuarios(){
-        try {
-            DataAccesUsuario dao = new DataAccesUsuario(st);
-            usuariosList = dao.getListaUsuarios();
-            
-            modelList.clear();
-            for (Usuario user : usuariosList) {
-                modelList.addElement(user.getUsuarioText());
-            }
-        } catch (Exception e) {
-            
+        if (bool2 == true){
+            lineaInicio.setBackground(Color.white);
+            lineaSolicitudes.setBackground(Color.red);
+            lineaRecursos.setBackground(Color.white );
+        }
+        if (bool3 == true){
+            lineaInicio.setBackground(Color.white);
+            lineaSolicitudes.setBackground(Color.white);
+            lineaRecursos.setBackground(Color.red );
         }
     }
-    private void limpiarCampos() {
-        txt_id.setText("");
-        txt_dni.setText("");
-        txt_nombre.setText("");
+    private void listarSolicitudes(String dni){
+        try {
+            DataAccesSolicitud das = new DataAccesSolicitud(st);
+            solicitudesList = das.getListaSolicitudesPersonal(dni);
+
+            dtm.setRowCount(0);
+
+            for (Solicitud solicitud : solicitudesList) {
+                o[0] = solicitud.getId();
+                o[1] = solicitud.getDni_Usuario();
+                o[2] = solicitud.getId_emergencia();
+                o[3] = solicitud.getDescripcion();
+                o[4] = solicitud.getDireccion();
+                o[5] = solicitud.getFecha().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                o[6] = solicitud.getEstado();
+
+                dtm.addRow(o);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar las solicitudes: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void cargarEmergencias() {
+        try {
+            DataAccesSolicitud das = new DataAccesSolicitud(st);
+            List<Emergencia> listaEmergencias = das.getEmergencias();
+
+            boxTipo.removeAllItems(); 
+
+            for (Emergencia emergencia : listaEmergencias) {
+                boxTipo.addItem(emergencia);
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar emergencias: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_buscar;
-    private javax.swing.JButton btn_eliminar;
-    private javax.swing.JButton btn_registrar;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel DNI1;
+    private javax.swing.JPanel background;
+    private javax.swing.JComboBox<Emergencia> boxTipo;
+    private javax.swing.JButton btnEnviar;
+    private javax.swing.JButton btnInicio;
+    private javax.swing.JButton btnRecursos;
+    private javax.swing.JButton btnSolicitudes;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private java.awt.TextField txt_dni;
-    private java.awt.TextField txt_id;
-    private java.awt.TextField txt_nombre;
-    private javax.swing.JList<String> usuariosLista;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPanel lineaInicio;
+    private javax.swing.JPanel lineaRecursos;
+    private javax.swing.JPanel lineaSolicitudes;
+    private javax.swing.JPanel panel1;
+    private javax.swing.JPanel panel2;
+    private javax.swing.JPanel panel3;
+    private javax.swing.JPanel panelInicio;
+    private javax.swing.JPanel panelRecursos;
+    private javax.swing.JPanel panelSolicitud;
+    private javax.swing.JPanel panelSolicitudes;
+    private javax.swing.JTable t_solicitudes;
+    private javax.swing.JTextArea txt_descripcion;
+    private javax.swing.JTextField txt_direccion;
+    public static javax.swing.JLabel txt_dni;
     // End of variables declaration//GEN-END:variables
 }

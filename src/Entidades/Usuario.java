@@ -13,33 +13,42 @@ import java.sql.SQLException;
  * @author PC
  */
 public class Usuario {
-    private int idUsuario;
-    private String nombre;
     private String dni;
+    private String nombre;
+    private String telefono;
+    private String correo;
+    private String contraseña;
 
-    public Usuario(String dni) {
+    public Usuario(String dni, String contraseña) {
         this.dni = dni;
+        this.contraseña = contraseña;
     }
-    public Usuario(String nombre, String dni) {
+    
+    public Usuario(String dni, String nombre, String telefono, String correo, String contraseña) {
+        this.dni = dni;
         this.nombre = nombre;
-        this.dni = dni;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.contraseña = contraseña;
     }
-
+    
     public Usuario(ResultSet rs) {
         try{
-            this.idUsuario = rs.getInt(1);
+            this.dni = rs.getString(1);
             this.nombre = rs.getString(2);
-            this.dni = rs.getString(3);
+            this.telefono = rs.getString(3);
+            this.correo = rs.getString(4);
+            this.contraseña = rs.getString(5);
         }catch(Exception e){
             
         }
     }
-    public int getIdUsuario() {
-        return idUsuario;
+    public String getDni() {
+        return dni;
     }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
     public String getNombre() {
@@ -50,15 +59,37 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getDni() {
-        return dni;
+    public String getTelefono() {
+        return telefono;
     }
 
-    public void setDni(String dni) {
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getContraseña() {
+        return contraseña;
+    }
+
+    public void setContraseña(String contraseña) {
+        this.contraseña = contraseña;
+    }
+
+    public Usuario(String dni) {
         this.dni = dni;
     }
-    
     public String getUsuarioText(){
-        return "" +idUsuario+ " - " + nombre + " - " + dni;
+        return "" + dni + " - " + nombre + " - " + telefono + " - " + correo+ " - " + contraseña;
+    }
+    public String getBienvenido(){
+        return "" + nombre + "";
     }
 }
