@@ -19,8 +19,10 @@ public class Usuario {
     private String telefono;
     private String correo;
     private String contraseña;
-    private List<Solicitud> solicitudes;
 
+    public Usuario() {
+    }
+    
     public Usuario(String dni, String nombre, String telefono, String correo) {
         this.dni = dni;
         this.nombre = nombre;

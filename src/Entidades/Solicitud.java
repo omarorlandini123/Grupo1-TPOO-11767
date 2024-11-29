@@ -16,41 +16,32 @@ import java.util.List;
  * @author PC
  */
 public class Solicitud {
+
     private int id;
-    private String dni_Usuario;
-    private String id_emergencia;
+    private Usuario usuario;
+    private Emergencia emergencia;
     private String descripcion;
     private String direccion;
     private LocalDateTime fecha;
     private String estado; //Pendiente//En proceso//Completado-Cancelado//
-    private List<Usuario> usuarios;
-    
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public Solicitud(int id, Usuario usuario, Emergencia emergencia, String descripcion, String direccion, String estado) {
+        this.id = id;
+        this.usuario = usuario;
+        this.emergencia = emergencia;
+        this.descripcion = descripcion;
+        this.direccion = direccion;
+        this.fecha = LocalDateTime.now();
+        this.estado = estado;
     }
     
-
     public Solicitud(int id) {
         this.id = id;
     }
-
-    public Solicitud(int id, String dni_Usuario, String id_emergencia, String descripcion, String direccion, LocalDateTime fecha, String estado) {
-        this.id = id;
-        this.dni_Usuario = dni_Usuario;
-        this.id_emergencia = id_emergencia;
-        this.descripcion = descripcion;
-        this.direccion = direccion;
-        this.fecha = fecha;
-        this.estado = estado;
-    }
-
-    public Solicitud(String dni_Usuario, String id_emergencia, String descripcion, String direccion, String estado) {
-        this.dni_Usuario = dni_Usuario;
-        this.id_emergencia = id_emergencia;
+    
+    public Solicitud(Usuario usuario, Emergencia emergencia, String descripcion, String direccion, String estado) {
+        this.usuario = usuario;
+        this.emergencia = emergencia;
         this.descripcion = descripcion;
         this.direccion = direccion;
         this.fecha = LocalDateTime.now();
@@ -60,8 +51,8 @@ public class Solicitud {
     public Solicitud(ResultSet rs) {
         try{
             this.id = rs.getInt("ID");
-            this.dni_Usuario = rs.getString("DNI_Usuario");
-            this.id_emergencia = rs.getString("ID_Emergencia");
+            this.usuario = new Usuario(rs.getString("DNI_Usuario"));
+            this.emergencia = new Emergencia(rs.getString("ID_Emergencia"));
             this.descripcion = rs.getString("Descripcion");
             this.direccion = rs.getString("Direccion");
             this.fecha = rs.getTimestamp("Fecha").toLocalDateTime();
@@ -77,23 +68,6 @@ public class Solicitud {
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getDni_Usuario() {
-        return dni_Usuario;
-    }
-
-    public void setDni_Usuario(String dni_Usuario) {
-        this.dni_Usuario = dni_Usuario;
-    }
-
-    public String getId_emergencia() {
-        return id_emergencia;
-    }
-
-    public void setId_emergencia(String id_emergencia) {
-        this.id_emergencia = id_emergencia;
-    }
-
     public String getDescripcion() {
         return descripcion;
     }
@@ -124,5 +98,20 @@ public class Solicitud {
 
     public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
+    }
+    public Emergencia getEmergencia() {
+        return emergencia;
+    }
+
+    public void setEmergencia(Emergencia emergencia) {
+        this.emergencia = emergencia;
+    }
+    
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

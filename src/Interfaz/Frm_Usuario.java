@@ -88,19 +88,6 @@ public class Frm_Usuario extends javax.swing.JFrame {
         btnSolicitudes = new javax.swing.JButton();
         btnRecursos = new javax.swing.JButton();
         btnPerfil = new javax.swing.JButton();
-        panelPerfil = new javax.swing.JPanel();
-        jLabel32 = new javax.swing.JLabel();
-        btn_Actualizar = new javax.swing.JButton();
-        jLabel33 = new javax.swing.JLabel();
-        txtTelefono = new javax.swing.JTextField();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel34 = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        txtCorreo = new javax.swing.JTextField();
-        jLabel35 = new javax.swing.JLabel();
-        btn_CerrarSesion = new javax.swing.JButton();
         panelInicio = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         panelSolicitud = new javax.swing.JPanel();
@@ -114,6 +101,19 @@ public class Frm_Usuario extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         txt_direccion = new javax.swing.JTextField();
         btnEliminarCuenta = new javax.swing.JButton();
+        panelPerfil = new javax.swing.JPanel();
+        jLabel32 = new javax.swing.JLabel();
+        btn_Actualizar = new javax.swing.JButton();
+        jLabel33 = new javax.swing.JLabel();
+        txtTelefono = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel34 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        txtCorreo = new javax.swing.JTextField();
+        jLabel35 = new javax.swing.JLabel();
+        btn_CerrarSesion = new javax.swing.JButton();
         panelRecursos = new javax.swing.JPanel();
         panelConsejosMedico = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -288,6 +288,82 @@ public class Frm_Usuario extends javax.swing.JFrame {
         });
         background.add(btnPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 90, 126, -1));
 
+        panelInicio.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setFont(new java.awt.Font("Roboto Light", 1, 18)); // NOI18N
+        jLabel6.setText("Bienvenido");
+        panelInicio.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 25, -1, 33));
+
+        panelSolicitud.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED, java.awt.Color.lightGray, java.awt.Color.gray, null, java.awt.Color.lightGray));
+        panelSolicitud.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(204, 0, 51));
+        jLabel7.setText("Solicitar Asistencia de Emergencia");
+        panelSolicitud.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 33));
+
+        jLabel8.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel8.setText("Descripcion");
+        panelSolicitud.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 230, 20));
+
+        boxTipo.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        boxTipo.setToolTipText("");
+        boxTipo.setName(""); // NOI18N
+        boxTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boxTipoActionPerformed(evt);
+            }
+        });
+        panelSolicitud.add(boxTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 250, -1));
+
+        btnEnviar.setBackground(new java.awt.Color(204, 0, 51));
+        btnEnviar.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        btnEnviar.setForeground(new java.awt.Color(255, 255, 255));
+        btnEnviar.setText("Enviar Solicitud de Emergencia");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
+        panelSolicitud.add(btnEnviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, 350, -1));
+
+        jLabel15.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel15.setText("Direccion");
+        panelSolicitud.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 40, 230, 20));
+
+        jScrollPane1.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+
+        txt_descripcion.setColumns(20);
+        txt_descripcion.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        txt_descripcion.setLineWrap(true);
+        txt_descripcion.setRows(5);
+        jScrollPane1.setViewportView(txt_descripcion);
+
+        panelSolicitud.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 660, 60));
+
+        jLabel16.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        jLabel16.setText("Tipo de Asistencia");
+        panelSolicitud.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 230, 20));
+
+        txt_direccion.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        txt_direccion.setToolTipText("");
+        panelSolicitud.add(txt_direccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 70, 280, -1));
+
+        panelInicio.add(panelSolicitud, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 700, 250));
+
+        btnEliminarCuenta.setBackground(new java.awt.Color(153, 0, 0));
+        btnEliminarCuenta.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        btnEliminarCuenta.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminarCuenta.setText("Eliminar Cuenta");
+        btnEliminarCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarCuentaActionPerformed(evt);
+            }
+        });
+        panelInicio.add(btnEliminarCuenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 400, 140, -1));
+
+        background.add(panelInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 760, 440));
+
         panelPerfil.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel32.setFont(new java.awt.Font("Roboto Light", 1, 18)); // NOI18N
@@ -403,82 +479,6 @@ public class Frm_Usuario extends javax.swing.JFrame {
         panelPerfil.add(btn_CerrarSesion, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 330, 170, 30));
 
         background.add(panelPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 770, 440));
-
-        panelInicio.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel6.setFont(new java.awt.Font("Roboto Light", 1, 18)); // NOI18N
-        jLabel6.setText("Bienvenido");
-        panelInicio.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 25, -1, 33));
-
-        panelSolicitud.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED, java.awt.Color.lightGray, java.awt.Color.gray, null, java.awt.Color.lightGray));
-        panelSolicitud.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel7.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel7.setText("Solicitar Asistencia de Emergencia");
-        panelSolicitud.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, 33));
-
-        jLabel8.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
-        jLabel8.setText("Descripcion");
-        panelSolicitud.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 230, 20));
-
-        boxTipo.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
-        boxTipo.setToolTipText("");
-        boxTipo.setName(""); // NOI18N
-        boxTipo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boxTipoActionPerformed(evt);
-            }
-        });
-        panelSolicitud.add(boxTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 250, -1));
-
-        btnEnviar.setBackground(new java.awt.Color(204, 0, 51));
-        btnEnviar.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        btnEnviar.setForeground(new java.awt.Color(255, 255, 255));
-        btnEnviar.setText("Enviar Solicitud de Emergencia");
-        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEnviarActionPerformed(evt);
-            }
-        });
-        panelSolicitud.add(btnEnviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 200, 350, -1));
-
-        jLabel15.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
-        jLabel15.setText("Direccion");
-        panelSolicitud.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 40, 230, 20));
-
-        jScrollPane1.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
-
-        txt_descripcion.setColumns(20);
-        txt_descripcion.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
-        txt_descripcion.setLineWrap(true);
-        txt_descripcion.setRows(5);
-        jScrollPane1.setViewportView(txt_descripcion);
-
-        panelSolicitud.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 660, 60));
-
-        jLabel16.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
-        jLabel16.setText("Tipo de Asistencia");
-        panelSolicitud.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 230, 20));
-
-        txt_direccion.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
-        txt_direccion.setToolTipText("");
-        panelSolicitud.add(txt_direccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 70, 280, -1));
-
-        panelInicio.add(panelSolicitud, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 700, 250));
-
-        btnEliminarCuenta.setBackground(new java.awt.Color(153, 0, 0));
-        btnEliminarCuenta.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        btnEliminarCuenta.setForeground(new java.awt.Color(255, 255, 255));
-        btnEliminarCuenta.setText("Eliminar Cuenta");
-        btnEliminarCuenta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarCuentaActionPerformed(evt);
-            }
-        });
-        panelInicio.add(btnEliminarCuenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 400, 140, -1));
-
-        background.add(panelInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 760, 440));
 
         panelRecursos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -819,10 +819,11 @@ public class Frm_Usuario extends javax.swing.JFrame {
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         Emergencia idSeleccionada = (Emergencia) boxTipo.getSelectedItem();
-
+        Usuario user = new Usuario(txt_dni.getText());
+        Emergencia emergencia = new Emergencia(idSeleccionada.getId());
         if (idSeleccionada != null && !txt_direccion.getText().trim().isEmpty()) {
 
-            Solicitud slc = new Solicitud(txt_dni.getText(), idSeleccionada.getId(), txt_descripcion.getText(), txt_direccion.getText(),"Pendiente");
+            Solicitud slc = new Solicitud(user, emergencia, txt_descripcion.getText(), txt_direccion.getText(),"Pendiente");
             insertarSolicitud(slc);
             String descripcion = txt_descripcion.getText();
             String direccion = txt_direccion.getText();
@@ -1011,8 +1012,8 @@ public class Frm_Usuario extends javax.swing.JFrame {
 
             for (Solicitud solicitud : solicitudesList) {
                 o[0] = solicitud.getId();
-                o[1] = solicitud.getDni_Usuario();
-                o[2] = solicitud.getId_emergencia();
+                o[1] = solicitud.getUsuario().getDni();
+                o[2] = solicitud.getEmergencia().getId();
                 o[3] = solicitud.getDescripcion();
                 o[4] = solicitud.getDireccion();
                 o[5] = solicitud.getFecha().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -1078,8 +1079,8 @@ public class Frm_Usuario extends javax.swing.JFrame {
                 for (Solicitud solicitud : solicitudes) {
                     dtm.addRow(new Object[]{
                         solicitud.getId(),
-                        solicitud.getDni_Usuario(),
-                        solicitud.getId_emergencia(),
+                        solicitud.getUsuario().getDni(),
+                        solicitud.getEmergencia().getId(),
                         solicitud.getDescripcion(),
                         solicitud.getDireccion(),
                         solicitud.getFecha(),

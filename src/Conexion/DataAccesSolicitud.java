@@ -24,6 +24,8 @@ import javax.swing.JOptionPane;
 public class DataAccesSolicitud {
     private Statement st;
     private Solicitud solicitud;
+    private Usuario user;
+    private Emergencia emergencia;
     private JFrame parentFrame;
     
     public DataAccesSolicitud(Statement st) {
@@ -78,8 +80,8 @@ public class DataAccesSolicitud {
     }
     public void insertarSolicitud() throws SQLException {
         try {
-            String nuevoDni = solicitud.getDni_Usuario();
-            String nuevaEmergencia = solicitud.getId_emergencia();
+            String nuevoDni = solicitud.getUsuario().getDni();
+            String nuevaEmergencia = solicitud.getEmergencia().getId();
             String nuevaDescripcion = solicitud.getDescripcion();
             String nuevaDireccion = solicitud.getDireccion();
             String nuevaFecha = solicitud.getFecha().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

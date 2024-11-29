@@ -415,13 +415,13 @@ public class Frm_Administrador extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, selecciona una solicitud para cambiar el estado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
         Solicitud solicitudSeleccionada = new Solicitud(
             Integer.parseInt(t_Solicitudes.getValueAt(selectedRow, 0).toString()), // ID
-            t_Solicitudes.getValueAt(selectedRow, 1).toString(), // DNI Usuario
-            t_Solicitudes.getValueAt(selectedRow, 2).toString(), // ID Emergencia
+            new Usuario(t_Solicitudes.getValueAt(selectedRow, 1).toString()),
+            new Emergencia(t_Solicitudes.getValueAt(selectedRow, 2).toString()), // Emergencia
             t_Solicitudes.getValueAt(selectedRow, 3).toString(), // Descripción
             t_Solicitudes.getValueAt(selectedRow, 4).toString(), // Dirección
-            LocalDateTime.parse(t_Solicitudes.getValueAt(selectedRow, 5).toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), // Fecha
             t_Solicitudes.getValueAt(selectedRow, 6).toString() // Estado
         );
 
@@ -462,8 +462,8 @@ public class Frm_Administrador extends javax.swing.JFrame {
             dtmSolicitudes.setRowCount(0);
             for (Solicitud solicitud : solicitudesList) {
                 oSolicitudes[0] = solicitud.getId();
-                oSolicitudes[1] = solicitud.getDni_Usuario();
-                oSolicitudes[2] = solicitud.getId_emergencia();
+                oSolicitudes[1] = solicitud.getUsuario().getDni();
+                oSolicitudes[2] = solicitud.getEmergencia().getId();
                 oSolicitudes[3] = solicitud.getDescripcion();
                 oSolicitudes[4] = solicitud.getDireccion();
                 oSolicitudes[5] = solicitud.getFecha().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
