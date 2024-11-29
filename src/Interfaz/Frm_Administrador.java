@@ -6,7 +6,9 @@ package Interfaz;
 
 import Conexion.DataAccesSolicitud;
 import Conexion.DataAccesUsuario;
+import Conexion.DataAccesEmergencia;
 import Conexion.DataBaseConnection;
+import Entidades.Emergencia;
 import Entidades.Solicitud;
 import Entidades.Usuario;
 import static Interfaz.Frm_Usuario.txt_dni;
@@ -14,6 +16,7 @@ import java.awt.Color;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,11 +33,14 @@ public class Frm_Administrador extends javax.swing.JFrame {
     private Statement st;
     private List<Usuario> usuariosList;
     private List<Solicitud> solicitudesList;
+    private List<Emergencia> emergenciasList;
     private Object[] oSolicitudes = new Object[7];
     private Object[] oUsuarios = new Object[5];
+    private Object[] oEmergencias = new Object[3];
     
     private DefaultTableModel dtmSolicitudes;
     private DefaultTableModel dtmUsuarios;
+    private DefaultTableModel dtmEmergencias;
     /**
      * Creates new form Frm_Administrador
      */
@@ -46,8 +52,9 @@ public class Frm_Administrador extends javax.swing.JFrame {
             initComponents();
             dtmSolicitudes = (DefaultTableModel) t_Solicitudes.getModel();
             dtmUsuarios = (DefaultTableModel) t_Usuarios.getModel();
+            dtmEmergencias = (DefaultTableModel) t_Emergencias.getModel();
             panelGestionUsuario.setVisible(false);
-            panelGestionEmergencia.setVisible(false);
+            panelGestionEmergencias.setVisible(false);
         } catch (SQLException e) {
             System.err.println("Error al crear el Statement: " + e.getMessage());
         }
@@ -64,22 +71,29 @@ public class Frm_Administrador extends javax.swing.JFrame {
     private void initComponents() {
 
         background = new javax.swing.JPanel();
-        panelGestionEmergencia = new javax.swing.JPanel();
+        panelOpciones = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        btnPanel = new javax.swing.JButton();
+        btnGestionSolicitudes = new javax.swing.JButton();
+        btnGestionUsuario = new javax.swing.JButton();
+        btnGestionEmergencias = new javax.swing.JButton();
+        panelGestionEmergencias = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        t_Emergencias = new javax.swing.JTable();
+        btn_actualizarEmergencia = new javax.swing.JButton();
+        panelGestionSolicitudes = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         t_Solicitudes = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        btn_cambiar_estado = new javax.swing.JButton();
         panelGestionUsuario = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         t_Usuarios = new javax.swing.JTable();
-        panelOpciones = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        btnPanel = new javax.swing.JButton();
-        btnGestionEmergencia = new javax.swing.JButton();
-        btnConfiguracion = new javax.swing.JButton();
-        btnGestionUsuario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(null);
@@ -88,90 +102,6 @@ public class Frm_Administrador extends javax.swing.JFrame {
         background.setDoubleBuffered(false);
         background.setPreferredSize(new java.awt.Dimension(810, 490));
         background.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        panelGestionEmergencia.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setFont(new java.awt.Font("Roboto Light", 1, 18)); // NOI18N
-        jLabel1.setText("Gestion de Emergencia");
-        panelGestionEmergencia.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 220, 30));
-
-        t_Solicitudes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "ID", "DNI Usuario", "ID Emergencia", "Descripcion", "Direccion", "Fecha", "Estado"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane2.setViewportView(t_Solicitudes);
-        if (t_Solicitudes.getColumnModel().getColumnCount() > 0) {
-            t_Solicitudes.getColumnModel().getColumn(0).setResizable(false);
-            t_Solicitudes.getColumnModel().getColumn(1).setResizable(false);
-            t_Solicitudes.getColumnModel().getColumn(2).setResizable(false);
-            t_Solicitudes.getColumnModel().getColumn(3).setResizable(false);
-            t_Solicitudes.getColumnModel().getColumn(6).setResizable(false);
-        }
-
-        panelGestionEmergencia.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 670, 340));
-
-        jLabel2.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        jLabel2.setText("Solicitudes de Emergencia");
-        panelGestionEmergencia.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 220, 30));
-
-        background.add(panelGestionEmergencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, 710, 490));
-
-        panelGestionUsuario.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel3.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
-        jLabel3.setText("Lista de Usuarios");
-        panelGestionUsuario.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 220, 30));
-
-        jLabel5.setFont(new java.awt.Font("Roboto Light", 1, 18)); // NOI18N
-        jLabel5.setText("Gestion de Usuario");
-        panelGestionUsuario.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 220, 30));
-
-        t_Usuarios.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "DNI", "Nombre", "Telefono", "Correo", "Contraseña"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane3.setViewportView(t_Usuarios);
-        if (t_Usuarios.getColumnModel().getColumnCount() > 0) {
-            t_Usuarios.getColumnModel().getColumn(0).setResizable(false);
-            t_Usuarios.getColumnModel().getColumn(1).setResizable(false);
-            t_Usuarios.getColumnModel().getColumn(2).setResizable(false);
-            t_Usuarios.getColumnModel().getColumn(3).setResizable(false);
-            t_Usuarios.getColumnModel().getColumn(4).setResizable(false);
-        }
-
-        panelGestionUsuario.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 670, 340));
-
-        background.add(panelGestionUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, 710, 490));
 
         panelOpciones.setBackground(new java.awt.Color(0, 153, 153));
         panelOpciones.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -207,56 +137,30 @@ public class Frm_Administrador extends javax.swing.JFrame {
         });
         panelOpciones.add(btnPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, 126, -1));
 
-        btnGestionEmergencia.setBackground(new java.awt.Color(0, 125, 118));
-        btnGestionEmergencia.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
-        btnGestionEmergencia.setForeground(new java.awt.Color(255, 255, 255));
-        btnGestionEmergencia.setText("Gestion de Emergencia");
-        btnGestionEmergencia.setBorder(null);
-        btnGestionEmergencia.setContentAreaFilled(false);
-        btnGestionEmergencia.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnGestionEmergencia.setDefaultCapable(false);
-        btnGestionEmergencia.setFocusPainted(false);
-        btnGestionEmergencia.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnGestionEmergencia.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnGestionSolicitudes.setBackground(new java.awt.Color(0, 125, 118));
+        btnGestionSolicitudes.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
+        btnGestionSolicitudes.setForeground(new java.awt.Color(255, 255, 255));
+        btnGestionSolicitudes.setText("Gestion de Solicitudes");
+        btnGestionSolicitudes.setBorder(null);
+        btnGestionSolicitudes.setContentAreaFilled(false);
+        btnGestionSolicitudes.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnGestionSolicitudes.setDefaultCapable(false);
+        btnGestionSolicitudes.setFocusPainted(false);
+        btnGestionSolicitudes.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnGestionSolicitudes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnGestionEmergenciaMouseEntered(evt);
+                btnGestionSolicitudesMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnGestionEmergenciaMouseExited(evt);
+                btnGestionSolicitudesMouseExited(evt);
             }
         });
-        btnGestionEmergencia.addActionListener(new java.awt.event.ActionListener() {
+        btnGestionSolicitudes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGestionEmergenciaActionPerformed(evt);
+                btnGestionSolicitudesActionPerformed(evt);
             }
         });
-        panelOpciones.add(btnGestionEmergencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 150, -1));
-
-        btnConfiguracion.setBackground(new java.awt.Color(0, 125, 118));
-        btnConfiguracion.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
-        btnConfiguracion.setForeground(new java.awt.Color(255, 255, 255));
-        btnConfiguracion.setText("Configuracion del sistema");
-        btnConfiguracion.setActionCommand("Configuracion del sistema");
-        btnConfiguracion.setBorder(null);
-        btnConfiguracion.setContentAreaFilled(false);
-        btnConfiguracion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnConfiguracion.setDefaultCapable(false);
-        btnConfiguracion.setFocusPainted(false);
-        btnConfiguracion.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btnConfiguracion.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btnConfiguracionMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btnConfiguracionMouseExited(evt);
-            }
-        });
-        btnConfiguracion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConfiguracionActionPerformed(evt);
-            }
-        });
-        panelOpciones.add(btnConfiguracion, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 170, -1));
+        panelOpciones.add(btnGestionSolicitudes, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 150, -1));
 
         btnGestionUsuario.setBackground(new java.awt.Color(0, 125, 118));
         btnGestionUsuario.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
@@ -283,14 +187,177 @@ public class Frm_Administrador extends javax.swing.JFrame {
         });
         panelOpciones.add(btnGestionUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 126, -1));
 
+        btnGestionEmergencias.setBackground(new java.awt.Color(0, 125, 118));
+        btnGestionEmergencias.setFont(new java.awt.Font("Roboto Light", 0, 14)); // NOI18N
+        btnGestionEmergencias.setForeground(new java.awt.Color(255, 255, 255));
+        btnGestionEmergencias.setText("Gestion de Emergencias");
+        btnGestionEmergencias.setBorder(null);
+        btnGestionEmergencias.setContentAreaFilled(false);
+        btnGestionEmergencias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnGestionEmergencias.setDefaultCapable(false);
+        btnGestionEmergencias.setFocusPainted(false);
+        btnGestionEmergencias.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        btnGestionEmergencias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btnGestionEmergenciasMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btnGestionEmergenciasMouseExited(evt);
+            }
+        });
+        btnGestionEmergencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGestionEmergenciasActionPerformed(evt);
+            }
+        });
+        panelOpciones.add(btnGestionEmergencias, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 200, 170, -1));
+
         background.add(panelOpciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 260, 510));
+
+        panelGestionEmergencias.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        jLabel6.setText("Emergencias");
+        panelGestionEmergencias.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 220, 30));
+
+        jLabel7.setFont(new java.awt.Font("Roboto Light", 1, 18)); // NOI18N
+        jLabel7.setText("Gestion de Emergencias");
+        panelGestionEmergencias.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 220, 30));
+
+        t_Emergencias.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "ID", "Nombre", "Telefono"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(t_Emergencias);
+
+        panelGestionEmergencias.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 670, 310));
+
+        btn_actualizarEmergencia.setText("Actualizar ");
+        btn_actualizarEmergencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_actualizarEmergenciaActionPerformed(evt);
+            }
+        });
+        panelGestionEmergencias.add(btn_actualizarEmergencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 130, -1, -1));
+
+        background.add(panelGestionEmergencias, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, 710, 490));
+
+        panelGestionSolicitudes.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Roboto Light", 1, 18)); // NOI18N
+        jLabel1.setText("Gestion de Solicitudes");
+        jLabel1.setToolTipText("");
+        panelGestionSolicitudes.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 220, 30));
+
+        t_Solicitudes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "DNI Usuario", "ID Emergencia", "Descripcion", "Direccion", "Fecha", "Estado"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(t_Solicitudes);
+
+        panelGestionSolicitudes.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 670, 340));
+
+        jLabel2.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        jLabel2.setText("Solicitudes ");
+        panelGestionSolicitudes.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 220, 30));
+
+        btn_cambiar_estado.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        btn_cambiar_estado.setText("Cambiar estado");
+        btn_cambiar_estado.setContentAreaFilled(false);
+        btn_cambiar_estado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cambiar_estadoActionPerformed(evt);
+            }
+        });
+        panelGestionSolicitudes.add(btn_cambiar_estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 90, 130, -1));
+
+        background.add(panelGestionSolicitudes, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, 710, 490));
+
+        panelGestionUsuario.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Roboto Light", 1, 14)); // NOI18N
+        jLabel3.setText("Lista de Usuarios");
+        panelGestionUsuario.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 220, 30));
+
+        jLabel5.setFont(new java.awt.Font("Roboto Light", 1, 18)); // NOI18N
+        jLabel5.setText("Gestion de Usuario");
+        panelGestionUsuario.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 220, 30));
+
+        t_Usuarios.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "DNI", "Nombre", "Telefono", "Correo", "Contraseña"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(t_Usuarios);
+
+        panelGestionUsuario.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 670, 340));
+
+        background.add(panelGestionUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 10, 710, 490));
 
         getContentPane().add(background);
         background.setBounds(0, 0, 1000, 510);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
- 
+
     private void btnPanelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPanelMouseEntered
         btnPanel.setForeground(Color.lightGray);
     }//GEN-LAST:event_btnPanelMouseEntered
@@ -301,34 +368,22 @@ public class Frm_Administrador extends javax.swing.JFrame {
 
     private void btnPanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanelActionPerformed
 
-
     }//GEN-LAST:event_btnPanelActionPerformed
 
-    private void btnGestionEmergenciaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGestionEmergenciaMouseEntered
-        btnGestionEmergencia.setForeground(Color.lightGray);
-    }//GEN-LAST:event_btnGestionEmergenciaMouseEntered
+    private void btnGestionSolicitudesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGestionSolicitudesMouseEntered
+        btnGestionSolicitudes.setForeground(Color.lightGray);
+    }//GEN-LAST:event_btnGestionSolicitudesMouseEntered
 
-    private void btnGestionEmergenciaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGestionEmergenciaMouseExited
-        btnGestionEmergencia.setForeground(Color.white);
-    }//GEN-LAST:event_btnGestionEmergenciaMouseExited
+    private void btnGestionSolicitudesMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGestionSolicitudesMouseExited
+        btnGestionSolicitudes.setForeground(Color.white);
+    }//GEN-LAST:event_btnGestionSolicitudesMouseExited
 
-    private void btnGestionEmergenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionEmergenciaActionPerformed
+    private void btnGestionSolicitudesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionSolicitudesActionPerformed
         panelGestionUsuario.setVisible(false);
-        panelGestionEmergencia.setVisible(true);
+        panelGestionEmergencias.setVisible(false);
+        panelGestionSolicitudes.setVisible(true);
         listarSolicitudes();
-    }//GEN-LAST:event_btnGestionEmergenciaActionPerformed
-
-    private void btnConfiguracionMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfiguracionMouseEntered
-        btnConfiguracion.setForeground(Color.lightGray);
-    }//GEN-LAST:event_btnConfiguracionMouseEntered
-
-    private void btnConfiguracionMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConfiguracionMouseExited
-        btnConfiguracion.setForeground(Color.white);
-    }//GEN-LAST:event_btnConfiguracionMouseExited
-
-    private void btnConfiguracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfiguracionActionPerformed
-
-    }//GEN-LAST:event_btnConfiguracionActionPerformed
+    }//GEN-LAST:event_btnGestionSolicitudesActionPerformed
 
     private void btnGestionUsuarioMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGestionUsuarioMouseEntered
         btnGestionUsuario.setForeground(Color.lightGray);
@@ -339,10 +394,65 @@ public class Frm_Administrador extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGestionUsuarioMouseExited
 
     private void btnGestionUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionUsuarioActionPerformed
-        panelGestionEmergencia.setVisible(false);
+        panelGestionSolicitudes.setVisible(false);
+        panelGestionEmergencias.setVisible(false);
         panelGestionUsuario.setVisible(true);
         listarUsuarios();
     }//GEN-LAST:event_btnGestionUsuarioActionPerformed
+
+    private void btnGestionEmergenciasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGestionEmergenciasMouseEntered
+        btnGestionEmergencias.setForeground(Color.lightGray);
+    }//GEN-LAST:event_btnGestionEmergenciasMouseEntered
+
+    private void btnGestionEmergenciasMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGestionEmergenciasMouseExited
+        btnGestionEmergencias.setForeground(Color.white);
+    }//GEN-LAST:event_btnGestionEmergenciasMouseExited
+
+    private void btn_cambiar_estadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cambiar_estadoActionPerformed
+        int selectedRow = t_Solicitudes.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona una solicitud para cambiar el estado.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Solicitud solicitudSeleccionada = new Solicitud(
+            Integer.parseInt(t_Solicitudes.getValueAt(selectedRow, 0).toString()), // ID
+            t_Solicitudes.getValueAt(selectedRow, 1).toString(), // DNI Usuario
+            t_Solicitudes.getValueAt(selectedRow, 2).toString(), // ID Emergencia
+            t_Solicitudes.getValueAt(selectedRow, 3).toString(), // Descripción
+            t_Solicitudes.getValueAt(selectedRow, 4).toString(), // Dirección
+            LocalDateTime.parse(t_Solicitudes.getValueAt(selectedRow, 5).toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), // Fecha
+            t_Solicitudes.getValueAt(selectedRow, 6).toString() // Estado
+        );
+
+        actualizarEstado(solicitudSeleccionada);
+        listarSolicitudes(); //Actualizar
+    }//GEN-LAST:event_btn_cambiar_estadoActionPerformed
+
+    private void btnGestionEmergenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGestionEmergenciasActionPerformed
+        panelGestionSolicitudes.setVisible(false);
+        panelGestionEmergencias.setVisible(true);
+        panelGestionUsuario.setVisible(false);
+        listarEmergencias();
+    }//GEN-LAST:event_btnGestionEmergenciasActionPerformed
+
+    private void btn_actualizarEmergenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_actualizarEmergenciaActionPerformed
+        int selectedRow = t_Emergencias.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, selecciona una emergencia para actualizar", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        Emergencia emergenciaSeleccionada = new Emergencia(
+            t_Emergencias.getValueAt(selectedRow, 0).toString(), // ID
+            t_Emergencias.getValueAt(selectedRow, 1).toString(), // Nombre
+            t_Emergencias.getValueAt(selectedRow, 2).toString()// Telefono
+        ); 
+                
+        actualizarEmergenciaSeleccionada(emergenciaSeleccionada);
+        listarEmergencias(); //Actualizar
+    }//GEN-LAST:event_btn_actualizarEmergenciaActionPerformed
+     
     private void listarSolicitudes(){
         try {
             dtmUsuarios.setRowCount(0);
@@ -383,23 +493,146 @@ public class Frm_Administrador extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al cargar los usuarios: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    private void listarEmergencias(){
+        try {
+            dtmEmergencias.setRowCount(0);
+
+            DataAccesEmergencia dae = new DataAccesEmergencia(st);
+            emergenciasList = dae.getListaEmergencias();
+
+            for (Emergencia emergencia : emergenciasList) {
+                oEmergencias[0] = emergencia.getId();
+                oEmergencias[1] = emergencia.getNombre();
+                oEmergencias[2] = emergencia.getTelefono();
+                dtmEmergencias.addRow(oEmergencias);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los usuarios: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    private void actualizarEmergenciaSeleccionada(Emergencia emergencia) {
+        String id = emergencia.getId();
+        int confirmacion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de que desea actualizar la emergencia con ID " + emergencia.getId() + "?",
+            "Confirmar Actualización",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            String nuevoNombre = JOptionPane.showInputDialog(this, "Ingrese el nuevo nombre de la emergencia:", emergencia.getNombre());
+            String nuevoTelefono = JOptionPane.showInputDialog(this, "Ingrese el nuevo teléfono de la emergencia:", emergencia.getTelefono());
+
+            if (nuevoNombre == null || nuevoNombre.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return; // Salir si el nombre es inválido
+            }
+
+            if (nuevoTelefono == null || nuevoTelefono.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El teléfono no puede estar vacío.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return; // Salir si el teléfono es inválido
+            }
+
+            emergencia.setNombre(nuevoNombre);
+            emergencia.setTelefono(nuevoTelefono);
+            emergencia.setId(id);
+
+            try {
+                
+                DataAccesEmergencia dae = new DataAccesEmergencia(st, emergencia);
+                dae.actualizarEmergencia();
+
+                JOptionPane.showMessageDialog(this, "Emergencia actualizada correctamente.");
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error al actualizar la emergencia: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No se realizó ningún cambio.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    
+    private void actualizarEstado(Solicitud solicitud){
+        int idSolicitud = solicitud.getId();
+        String estado = solicitud.getEstado();
+        
+        String[] opciones;
+        
+        switch (estado) {
+            case "Pendiente":
+                opciones = new String[]{"En proceso", "Completado", "Cancelado"};
+                break;
+            case "En proceso":
+                opciones = new String[]{"Completado", "Cancelado"};
+                break;
+            case "Completado":
+                JOptionPane.showMessageDialog(this, "No es posible cambiar el estado de una solicitud '" + estado + "'.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                return; 
+            case "Cancelado":
+                JOptionPane.showMessageDialog(this, "No es posible cambiar el estado de una solicitud '" + estado + "'.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                return; 
+            default:
+                JOptionPane.showMessageDialog(this, "Estado desconocido: " + estado, "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+        }
+
+        String nuevoEstado = (String) JOptionPane.showInputDialog(
+            this,
+            "Seleccione el nuevo estado:",
+            "Cambiar Estado",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            opciones,
+            opciones[0]
+        );
+
+        if (!nuevoEstado.equals(estado)) {
+            
+            int confirmacion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de que desea cambiar el estado de la solicitud con ID " + idSolicitud + " de '" + estado + "' a '" + nuevoEstado + "'?",
+                "Confirmar Cambio de Estado",
+                JOptionPane.YES_NO_OPTION
+            );
+              
+            //Enviar a DataAccesSolicitud
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                try {
+                    solicitud.setId(idSolicitud);
+                    solicitud.setEstado(nuevoEstado);
+                    DataAccesSolicitud das = new DataAccesSolicitud(st, solicitud);
+                    das.actualizarEstadoSolicitud();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(this, "Error al cambiar el estado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else if (nuevoEstado.equals(estado)) {
+            JOptionPane.showMessageDialog(this, "El estado seleccionado es el mismo que el actual. No se realizaron cambios.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel background;
-    private javax.swing.JButton btnConfiguracion;
-    private javax.swing.JButton btnGestionEmergencia;
+    private javax.swing.JButton btnGestionEmergencias;
+    private javax.swing.JButton btnGestionSolicitudes;
     private javax.swing.JButton btnGestionUsuario;
     private javax.swing.JButton btnPanel;
+    private javax.swing.JButton btn_actualizarEmergencia;
+    private javax.swing.JButton btn_cambiar_estado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JPanel panelGestionEmergencia;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JPanel panelGestionEmergencias;
+    private javax.swing.JPanel panelGestionSolicitudes;
     private javax.swing.JPanel panelGestionUsuario;
     private javax.swing.JPanel panelOpciones;
+    private javax.swing.JTable t_Emergencias;
     private javax.swing.JTable t_Solicitudes;
     private javax.swing.JTable t_Usuarios;
     // End of variables declaration//GEN-END:variables

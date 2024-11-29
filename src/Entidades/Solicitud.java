@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -22,6 +23,30 @@ public class Solicitud {
     private String direccion;
     private LocalDateTime fecha;
     private String estado; //Pendiente//En proceso//Completado-Cancelado//
+    private List<Usuario> usuarios;
+    
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
+    
+
+    public Solicitud(int id) {
+        this.id = id;
+    }
+
+    public Solicitud(int id, String dni_Usuario, String id_emergencia, String descripcion, String direccion, LocalDateTime fecha, String estado) {
+        this.id = id;
+        this.dni_Usuario = dni_Usuario;
+        this.id_emergencia = id_emergencia;
+        this.descripcion = descripcion;
+        this.direccion = direccion;
+        this.fecha = fecha;
+        this.estado = estado;
+    }
 
     public Solicitud(String dni_Usuario, String id_emergencia, String descripcion, String direccion, String estado) {
         this.dni_Usuario = dni_Usuario;

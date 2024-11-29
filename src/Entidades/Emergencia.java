@@ -4,6 +4,7 @@
  */
 package Entidades;
 import java.sql.ResultSet;
+import java.util.List;
 
 /**
  *
@@ -13,7 +14,13 @@ public class Emergencia {
     private String id;
     private String nombre;
     private String telefono;
-    private String descripcion;
+    private List<Solicitud> solicitudes;
+
+    public Emergencia(String id, String nombre, String telefono) {
+        this.id = id;
+        this.nombre = nombre;
+        this.telefono = telefono;
+    }
     
     public Emergencia(String nombre) {
         this.nombre = nombre;
@@ -28,7 +35,6 @@ public class Emergencia {
             this.id = rs.getString(1);
             this.nombre = rs.getString(2);
             this.telefono = rs.getString(3);
-            this.descripcion = rs.getString(4);
         }catch(Exception e){
             
         }
@@ -55,14 +61,6 @@ public class Emergencia {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
     
     @Override

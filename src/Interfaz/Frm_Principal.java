@@ -61,6 +61,7 @@ public class Frm_Principal extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         btnIngresar = new javax.swing.JButton();
+        btnCambiarContra = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Bienvenido");
@@ -94,6 +95,11 @@ public class Frm_Principal extends javax.swing.JFrame {
         txt_Dni.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 txt_DniMousePressed(evt);
+            }
+        });
+        txt_Dni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_DniActionPerformed(evt);
             }
         });
         background.add(txt_Dni, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 170, 380, 30));
@@ -193,6 +199,18 @@ public class Frm_Principal extends javax.swing.JFrame {
         });
         background.add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 340, 210, 30));
 
+        btnCambiarContra.setBackground(java.awt.SystemColor.activeCaption);
+        btnCambiarContra.setFont(new java.awt.Font("Roboto Light", 0, 12)); // NOI18N
+        btnCambiarContra.setText("Cambiar contraseña");
+        btnCambiarContra.setContentAreaFilled(false);
+        btnCambiarContra.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCambiarContra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCambiarContraActionPerformed(evt);
+            }
+        });
+        background.add(btnCambiarContra, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 290, 150, 20));
+
         getContentPane().add(background);
         background.setBounds(0, 0, 630, 490);
 
@@ -207,11 +225,10 @@ public class Frm_Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_DniMousePressed
 
     private void btnAyudaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAyudaActionPerformed
-         try {
+        try {
             JOptionPane.showMessageDialog(this, "Llamando ayuda...", "Información", JOptionPane.INFORMATION_MESSAGE);
         } catch (HeadlessException headlessException) {
         }
-
     }//GEN-LAST:event_btnAyudaActionPerformed
 
     private void btnAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdministradorActionPerformed
@@ -236,11 +253,22 @@ public class Frm_Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_ContraseñaMousePressed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-            String dni = txt_Dni.getText();
-            String contraseña = txt_Contraseña.getText();
-            Usuario user = new Usuario(dni, contraseña);
-            buscarUsuario(user, dni, contraseña);
+        String dni = txt_Dni.getText();
+        String contraseña = txt_Contraseña.getText();
+        Usuario user = new Usuario(dni, contraseña);
+        buscarUsuario(user, dni, contraseña);
     }//GEN-LAST:event_btnIngresarActionPerformed
+
+    private void btnCambiarContraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarContraActionPerformed
+        java.awt.Point location = this.getLocation();
+        DataBaseConnection.pantallaCambiarContra.setLocation(location);
+        DataBaseConnection.pantallaCambiarContra.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnCambiarContraActionPerformed
+
+    private void txt_DniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_DniActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_DniActionPerformed
 
  
     private void buscarUsuario(Usuario user, String dni, String contraseña){
@@ -255,7 +283,7 @@ public class Frm_Principal extends javax.swing.JFrame {
                 this.setVisible(false);
                 Interfaz.Frm_Usuario.txt_dni.setText(dni);
             } else {
-                JOptionPane.showMessageDialog(this, "Usuario no encontrado.");
+                JOptionPane.showMessageDialog(this, "Ingrese contraseña correcta o registrese");
             }
         } catch (SQLException ex) {
             Logger.getLogger(Frm_Usuario.class.getName()).log(Level.SEVERE, null, ex);
@@ -268,6 +296,7 @@ public class Frm_Principal extends javax.swing.JFrame {
     private javax.swing.JPanel background;
     private javax.swing.JButton btnAdministrador;
     private javax.swing.JButton btnAyuda;
+    private javax.swing.JButton btnCambiarContra;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JLabel jLabel1;

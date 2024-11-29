@@ -88,6 +88,47 @@ public class DataAccesSolicitud {
             st.execute("INSERT INTO Solicitud (DNI_Usuario, ID_Emergencia, Descripcion, Direccion, Fecha, Estado) VALUES ('" + nuevoDni + "', '" + nuevaEmergencia + "','" + nuevaDescripcion + "','" + nuevaDireccion+ "','"+ nuevaFecha + "','" +nuevoEstado + "')");
             JOptionPane.showMessageDialog(parentFrame, "Solicitud insertada correctamente");
         } catch (HeadlessException headlessException) {
+            System.out.print("Error al ingresar datos");
+        }
+    }
+     public List<Solicitud> filtrarSolicitudes(String estado, String orden, String idEmergencia, String dni) throws SQLException {
+        
+        StringBuilder query = new StringBuilder("SELECT ID, DNI_Usuario, ID_Emergencia, Descripcion, Direccion, Fecha, Estado FROM Solicitud WHERE DNI_Usuario = '").append(dni).append("'");
+
+        if (estado != null && !estado.isEmpty()) {
+            query.append(" AND Estado = '").append(estado).append("'");
+        }
+                
+        if (idEmergencia != null && !idEmergencia.isEmpty()) {
+            query.append(" AND ID_Emergencia = '").append(idEmergencia).append("'");
+        }
+        
+        if (orden != null && !orden.isEmpty()) {
+            query.append(" ORDER BY Fecha ").append(orden);
+        }
+        
+        List<Solicitud> solicitudes = new ArrayList<>();
+        
+        System.out.println(query);
+        ResultSet rs = null;
+        try {
+            rs = st.executeQuery(query.toString()); // Ejecutar la consulta con Statement
+            while (rs.next()) {
+                solicitudes.add(new Solicitud(rs)); // Crear objetos Solicitud a partir del ResultSet
+            }
+        } finally {
+            if (rs != null) rs.close(); // Cerrar el ResultSet
+        }
+
+        return solicitudes;
+    }
+    public void actualizarEstadoSolicitud() throws SQLException {
+        try {
+            String query = "UPDATE Solicitud SET Estado = '" + solicitud.getEstado() + "' WHERE ID = " + solicitud.getId();
+            st.execute(query);
+            System.out.println("Estado de la solicitud actualizado correctamente.");
+        } catch (SQLException e) {
+            throw new SQLException("Error al actualizar el estado de la solicitud: " + e.getMessage());
         }
     }
 }

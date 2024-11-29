@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
    
 import Entidades.Usuario;
 import Interfaz.Frm_Administrador;
+import Interfaz.Frm_CambiarContra;
 import Interfaz.Frm_Contraseña;
 import Interfaz.Frm_Principal;
 import Interfaz.Frm_Registrar_Usuario;
@@ -33,6 +34,7 @@ public class DataBaseConnection {
     public static Frm_Registrar_Usuario pantallaRegistrarUsuario = new Frm_Registrar_Usuario();
     public static Frm_Administrador pantallaAdministrador = new Frm_Administrador();
     public static Frm_Contraseña pantallaContraseña = new Frm_Contraseña();
+    public static Frm_CambiarContra pantallaCambiarContra = new Frm_CambiarContra();
     
     private static DataBaseConnection instancia;
     private Connection conexion;

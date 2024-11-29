@@ -6,6 +6,7 @@ package Interfaz;
 
 import Conexion.DataBaseConnection;
 import java.awt.Color;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -92,6 +93,8 @@ public class Frm_Contraseña extends javax.swing.JFrame {
         if ("admin".equals(contra)){
             this.setVisible(false);
             DataBaseConnection.pantallaAdministrador.setVisible(true);
+        }else{
+        JOptionPane.showMessageDialog(this, "Codigo incorrecto, por favor ingrese de nuevo", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnContraseñaActionPerformed
 

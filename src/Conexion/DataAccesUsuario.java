@@ -82,5 +82,57 @@ public class DataAccesUsuario {
             throw new SQLException("Error al buscar el usuario: " + e.getMessage());
         }
         return usuarioEncontrado;
-    }    
+    }
+    public boolean buscarUsuario() throws SQLException {
+        try {
+            ResultSet rs = st.executeQuery(
+                "SELECT * FROM Usuario WHERE DNI_Usuario = '" + user.getDni() + "' AND Contraseña = '" + user.getContraseña() + "'"
+            );
+
+            if (rs.next()) {
+                return true; 
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error al buscar el usuario: " + e.getMessage());
+        }
+    }
+    
+    public void actualizarContraseña() throws SQLException {
+        try {
+            String query = "UPDATE Usuario SET Contraseña = '" + user.getContraseña()+ "' WHERE DNI_Usuario = " + user.getDni();
+            st.execute(query);
+            System.out.println("Contraseña actualizada correctamente");
+        } catch (SQLException e) {
+            throw new SQLException("Error al actualizar la contraseña: " + e.getMessage());
+        }
+    }
+    public Usuario buscarDatosUsuario() throws SQLException {
+        Usuario usuarioEncontrado = null;
+        try {
+            ResultSet rs = st.executeQuery(    "SELECT * FROM Usuario WHERE DNI_Usuario = '" + user.getDni() + "'");
+            if (rs.next()) {
+                usuarioEncontrado = new Usuario(rs);
+            } else {
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error al buscar el usuario: " + e.getMessage());
+        }
+        return usuarioEncontrado;
+    }
+    public void actualizarUsuario() throws SQLException {
+        try {
+            String query = "UPDATE Usuario SET " +
+                           "Nombre = '" + user.getNombre() + "', " +
+                           "Telefono = '" + user.getTelefono() + "', " +
+                           "Correo = '" + user.getCorreo() + "' " +
+                           "WHERE DNI_Usuario = '" + user.getDni() + "'";
+
+            st.execute(query);
+            System.out.println("Usuario actualizado correctamente.");
+        } catch (SQLException e) {
+            throw new SQLException("Error al actualizar el usuario: " + e.getMessage());
+        }
+    }
 }

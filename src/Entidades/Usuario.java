@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 /**
  *
  * @author PC
@@ -18,6 +19,15 @@ public class Usuario {
     private String telefono;
     private String correo;
     private String contraseña;
+    private List<Solicitud> solicitudes;
+
+    public Usuario(String dni, String nombre, String telefono, String correo) {
+        this.dni = dni;
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.correo = correo;
+    }
+
 
     public Usuario(String dni, String contraseña) {
         this.dni = dni;
